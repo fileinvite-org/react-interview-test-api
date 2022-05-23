@@ -27,7 +27,7 @@ app.get("/bookings/:id", function (req, res, next) {
   }
 
   const booking = roomBookings.find(
-    (booking) => booking.id === parseInt(req.params.id)
+      (booking) => booking.id === parseInt(req.params.id)
   );
 
   if (!booking) {
@@ -43,10 +43,11 @@ app.post("/bookings", function (req, res, next) {
 
   const newBooking = {
     id: maxId + 1,
-    hostName,
-    guests,
-    bookingTimeStart,
-    duration,
+    hostName: req.body?.hostName,
+    roomName: req.body?.roomName,
+    guests: req.body?.guests,
+    bookingTimeStart: req.body?.bookingTimeStart,
+    duration: req.body?.duration,
     bookingDate: moment({ current, dateFormat }).toDate(),
   };
 
@@ -55,15 +56,15 @@ app.post("/bookings", function (req, res, next) {
   res.status(201).json(newBooking);
 });
 
-app.patch("/bookings/:id", function (req, res, next) {
+app.put("/bookings/:id", function (req, res, next) {
   const allowedFields = ["hostName", "guests", "bookingTimeStart", "duration"];
   const id = roomBookings.findIndex(
-    (booking) => booking.id === parseInt(req.params.id)
+      (booking) => booking.id === parseInt(req.params.id)
   );
 
   allowedFields.forEach((field) => {
     roomBookings[id][field] =
-      req.body[field] === undefined ? roomBookings[id][field] : req.body[field];
+        req.body[field] === undefined ? roomBookings[id][field] : req.body[field];
   });
 
   res.status(200).json(roomBookings[id]);
@@ -77,7 +78,7 @@ app.delete("/bookings/:id", function (req, res, next) {
   }
 
   roomBookings = roomBookings.filter(
-    (booking) => booking.id !== parseInt(req.params.id)
+      (booking) => booking.id !== parseInt(req.params.id)
   );
   res.send();
 });
